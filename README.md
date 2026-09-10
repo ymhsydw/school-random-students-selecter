@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>청소당번 뽑기</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 700px;
+      padding: 40px;
+      text-align: center;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 40px;
+    }
+
+    p {
+      color: #555;
+      margin-bottom: 25px;
+    }
+
+    .settings {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    .setting-box {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .setting-box label {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .setting-box input {
+      width: 130px;
+      padding: 12px;
+      font-size: 18px;
+      text-align: center;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      outline: none;
+    }
+
+    .setting-box input:focus {
+      border-color: #3b82f6;
+    }
+
+    .result {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 35px;
+      min-height: 80px;
+    }
+
+    .number {
+      width: 80px;
+      height: 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      background: #3b82f6;
+      color: white;
+
+      border-radius: 50%;
+
+      font-size: 30px;
+      font-weight: bold;
+
+      transition: 0.3s;
+    }
+
+    .number.show {
+      transform: scale(1.15);
+      background: #22c55e;
+    }
+
+    button {
+      padding: 15px 40px;
+      border: none;
+      border-radius: 10px;
+
+      background: #2563eb;
+      color: white;
+
+      font-size: 20px;
+      font-weight: bold;
+
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+      transform: scale(1.05);
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    .message {
+      margin-top: 20px;
+      color: #ef4444;
+      font-weight: bold;
+      min-height: 24px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1>🧹 청소당번 뽑기</h1>
+
+    <p>전체 인원과 뽑을 인원을 설정한 뒤 버튼을 눌러주세요.</p>
+
+    <div class="settings">
+
+      <div class="setting-box">
+        <label for="totalStudents">전체 인원</label>
+        <input
+          type="number"
+          id="totalStudents"
+          value="25"
+          min="1"
+          max="100"
+        >
+      </div>
+
+      <div class="setting-box">
+        <label for="drawCount">뽑을 인원</label>
+        <input
+          type="number"
+          id="drawCount"
+          value="5"
+          min="1"
+          max="100"
+        >
+      </div>
+
+    </div>
+
+    <div class="result" id="result"></div>
+
+    <button id="drawButton">청소당번 뽑기</button>
+
+    <div class="message" id="message"></div>
+
+  </div>
+
+  <script>
+    const drawButton = document.getElementById("drawButton");
+    const totalStudentsInput = document.getElementById("totalStudents");
+    const drawCountInput = document.getElementById("drawCount");
+    const result = document.getElementById("result");
+    const message = document.getElementById("message");
+
+    drawButton.addEventListener("click", drawStudents);
+
+    function drawStudents() {
+
+      const totalStudents = Number(totalStudentsInput.value);
+      const drawCount = Number(drawCountInput.value);
+
+      message.textContent = "";
+      result.innerHTML = "";
+
+      // 입력값 확인
+      if (totalStudents < 1) {
+        message.textContent = "전체 인원은 1명 이상이어야 합니다.";
+        return;
+      }
+
+      if (drawCount < 1) {
+        message.textContent = "뽑을 인원은 1명 이상이어야 합니다.";
+        return;
+      }
+
+      if (drawCount > totalStudents) {
+        message.textContent =
+          "뽑을 인원은 전체 인원보다 많을 수 없습니다.";
+        return;
+      }
+
+      const students = [];
+
+      // 1번부터 설정한 전체 인원까지 생성
+      for (let i = 1; i <= totalStudents; i++) {
+        students.push(i);
+      }
+
+      // Fisher-Yates 방식으로 랜덤 섞기
+      for (let i = students.length - 1; i > 0; i--) {
+
+        const randomIndex =
+          Math.floor(Math.random() * (i + 1));
+
+        [students[i], students[randomIndex]] =
+          [students[randomIndex], students[i]];
+      }
+
+      // 설정한 인원만큼 중복 없이 선택
+      const selected = students.slice(0, drawCount);
+
+      // 번호순으로 정렬
+      selected.sort((a, b) => a - b);
+
+      // 결과 원 만들기
+      selected.forEach(() => {
+
+        const numberElement = document.createElement("div");
+
+        numberElement.classList.add("number");
+        numberElement.textContent = "?";
+
+        result.appendChild(numberElement);
+      });
+
+      const numberElements =
+        document.querySelectorAll(".number");
+
+      // 한 명씩 결과 표시
+      numberElements.forEach((element, index) => {
+
+        setTimeout(() => {
+
+          element.textContent = selected[index];
+          element.classList.add("show");
+
+        }, index * 300);
+
+      });
+    }
+  </script>
+
+</body>
+</html>
