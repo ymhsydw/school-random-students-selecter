@@ -1,269 +1,76 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>청소당번 뽑기</title>
+# 🧹 청소당번 뽑기
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+랜덤으로 청소당번을 뽑을 수 있는 간단한 웹페이지입니다.
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: Arial, sans-serif;
-      background: #f1f5f9;
-    }
+전체 인원 수와 뽑을 인원 수를 직접 설정할 수 있으며, 설정한 범위 안에서 중복 없이 랜덤으로 인원을 선택합니다.
 
-    .container {
-      width: 90%;
-      max-width: 700px;
-      padding: 40px;
-      text-align: center;
-      background: white;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-    }
+## 주요 기능
 
-    h1 {
-      margin-top: 0;
-      font-size: 40px;
-    }
+* 전체 인원 수 설정
+* 청소당번으로 뽑을 인원 수 설정
+* 중복 없이 랜덤 추첨
+* 선택된 번호를 오름차순으로 정렬
+* 결과가 한 명씩 순서대로 나타나는 애니메이션
+* 뽑을 인원이 전체 인원보다 많을 경우 오류 메시지 표시
+* 별도의 프로그램 설치 없이 웹 브라우저에서 실행 가능
 
-    p {
-      color: #555;
-      margin-bottom: 25px;
-    }
+## 사용 방법
 
-    .settings {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-bottom: 30px;
-    }
+1. `index.html` 파일을 실행합니다.
+2. **전체 인원**에 반의 전체 학생 수를 입력합니다.
+3. **뽑을 인원**에 청소당번으로 뽑을 학생 수를 입력합니다.
+4. **청소당번 뽑기** 버튼을 클릭합니다.
+5. 랜덤으로 선택된 학생 번호가 화면에 표시됩니다.
 
-    .setting-box {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+### 사용 예시
 
-    .setting-box label {
-      font-weight: bold;
-      color: #333;
-    }
+전체 인원이 `25명`이고 청소당번을 `5명` 뽑도록 설정하면,
 
-    .setting-box input {
-      width: 130px;
-      padding: 12px;
-      font-size: 18px;
-      text-align: center;
-      border: 2px solid #cbd5e1;
-      border-radius: 10px;
-      outline: none;
-    }
+`1번 ~ 25번` 중에서 중복 없이 5명의 번호가 랜덤으로 선택됩니다.
 
-    .setting-box input:focus {
-      border-color: #3b82f6;
-    }
+예시 결과:
 
-    .result {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      flex-wrap: wrap;
-      margin-bottom: 35px;
-      min-height: 80px;
-    }
+```text
+3  8  13  17  24
+```
 
-    .number {
-      width: 80px;
-      height: 80px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+실행할 때마다 결과가 달라질 수 있습니다.
 
-      background: #3b82f6;
-      color: white;
+## 사용 기술
 
-      border-radius: 50%;
+* HTML
+* CSS
+* JavaScript
 
-      font-size: 30px;
-      font-weight: bold;
+## 랜덤 추첨 방식
 
-      transition: 0.3s;
-    }
+먼저 1번부터 설정한 전체 인원 수까지의 번호를 배열에 저장합니다.
 
-    .number.show {
-      transform: scale(1.15);
-      background: #22c55e;
-    }
+이후 JavaScript의 랜덤 기능을 이용해 번호의 순서를 섞은 뒤, 앞에서부터 설정한 인원 수만큼 선택합니다.
 
-    button {
-      padding: 15px 40px;
-      border: none;
-      border-radius: 10px;
+선택된 번호는 보기 편하도록 오름차순으로 정렬하여 화면에 출력합니다.
 
-      background: #2563eb;
-      color: white;
+## 프로젝트 구조
 
-      font-size: 20px;
-      font-weight: bold;
+```text
+cleaning-duty/
+│
+├── index.html
+└── README.md
+```
 
-      cursor: pointer;
-      transition: 0.2s;
-    }
+## 실행 방법
 
-    button:hover {
-      background: #1d4ed8;
-      transform: scale(1.05);
-    }
+별도의 설치 과정이 필요하지 않습니다.
 
-    button:active {
-      transform: scale(0.95);
-    }
+`index.html` 파일을 더블 클릭하거나 웹 브라우저에서 열면 바로 사용할 수 있습니다.
 
-    .message {
-      margin-top: 20px;
-      color: #ef4444;
-      font-weight: bold;
-      min-height: 24px;
-    }
-  </style>
-</head>
+## 주의사항
 
-<body>
+* 전체 인원은 1명 이상 입력해야 합니다.
+* 뽑을 인원은 1명 이상 입력해야 합니다.
+* 뽑을 인원은 전체 인원보다 많을 수 없습니다.
 
-  <div class="container">
+## 목적
 
-    <h1>🧹 청소당번 뽑기</h1>
-
-    <p>전체 인원과 뽑을 인원을 설정한 뒤 버튼을 눌러주세요.</p>
-
-    <div class="settings">
-
-      <div class="setting-box">
-        <label for="totalStudents">전체 인원</label>
-        <input
-          type="number"
-          id="totalStudents"
-          value="25"
-          min="1"
-          max="100"
-        >
-      </div>
-
-      <div class="setting-box">
-        <label for="drawCount">뽑을 인원</label>
-        <input
-          type="number"
-          id="drawCount"
-          value="5"
-          min="1"
-          max="100"
-        >
-      </div>
-
-    </div>
-
-    <div class="result" id="result"></div>
-
-    <button id="drawButton">청소당번 뽑기</button>
-
-    <div class="message" id="message"></div>
-
-  </div>
-
-  <script>
-    const drawButton = document.getElementById("drawButton");
-    const totalStudentsInput = document.getElementById("totalStudents");
-    const drawCountInput = document.getElementById("drawCount");
-    const result = document.getElementById("result");
-    const message = document.getElementById("message");
-
-    drawButton.addEventListener("click", drawStudents);
-
-    function drawStudents() {
-
-      const totalStudents = Number(totalStudentsInput.value);
-      const drawCount = Number(drawCountInput.value);
-
-      message.textContent = "";
-      result.innerHTML = "";
-
-      // 입력값 확인
-      if (totalStudents < 1) {
-        message.textContent = "전체 인원은 1명 이상이어야 합니다.";
-        return;
-      }
-
-      if (drawCount < 1) {
-        message.textContent = "뽑을 인원은 1명 이상이어야 합니다.";
-        return;
-      }
-
-      if (drawCount > totalStudents) {
-        message.textContent =
-          "뽑을 인원은 전체 인원보다 많을 수 없습니다.";
-        return;
-      }
-
-      const students = [];
-
-      // 1번부터 설정한 전체 인원까지 생성
-      for (let i = 1; i <= totalStudents; i++) {
-        students.push(i);
-      }
-
-      // Fisher-Yates 방식으로 랜덤 섞기
-      for (let i = students.length - 1; i > 0; i--) {
-
-        const randomIndex =
-          Math.floor(Math.random() * (i + 1));
-
-        [students[i], students[randomIndex]] =
-          [students[randomIndex], students[i]];
-      }
-
-      // 설정한 인원만큼 중복 없이 선택
-      const selected = students.slice(0, drawCount);
-
-      // 번호순으로 정렬
-      selected.sort((a, b) => a - b);
-
-      // 결과 원 만들기
-      selected.forEach(() => {
-
-        const numberElement = document.createElement("div");
-
-        numberElement.classList.add("number");
-        numberElement.textContent = "?";
-
-        result.appendChild(numberElement);
-      });
-
-      const numberElements =
-        document.querySelectorAll(".number");
-
-      // 한 명씩 결과 표시
-      numberElements.forEach((element, index) => {
-
-        setTimeout(() => {
-
-          element.textContent = selected[index];
-          element.classList.add("show");
-
-        }, index * 300);
-
-      });
-    }
-  </script>
-
-</body>
-</html>
+학교나 학급에서 청소당번을 공정하고 간단하게 랜덤으로 정하기 위해 제작한 웹페이지입니다.
